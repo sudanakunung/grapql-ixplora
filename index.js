@@ -1,26 +1,24 @@
-var express = require('express');
-var { graphqlHTTP } = require('express-graphql');
-var { buildSchema } = require('graphql');
+const express = require("express");
+const {graphqlHTTP} = require("express-graphql");
+const schema = require("./grapql/schema/schema");
+const mongoose = require("mongoose");
+const app = express();
+require("dotenv").config();
 
-// Construct a schema, using GraphQL schema language
-var schema = buildSchema(`
-  type Query {
-    hello: String
-  }
-`);
+mongoose.connect(process.env.database);
 
-// The root provides a resolver function for each API endpoint
-var root = {
-  hello: () => {
-    return 'Hello world!';
-  },
-};
+mongoose.connection.once("open", () => {
+  console.log("connected to database");
+});
 
-var app = express();
-app.use('/graphql', graphqlHTTP({
-  schema: schema,
-  rootValue: root,
-  graphiql: true,
-}));
-app.listen(4000);
-console.log('Running a GraphQL API server at http://localhost:4000/graphql');
+app.use(
+  "/graphql",
+  graphqlHTTP({
+    schema,
+    graphiql: true,
+  })
+);
+
+app.listen(3000, () => {
+  console.log("Listening on port 3000");
+});
