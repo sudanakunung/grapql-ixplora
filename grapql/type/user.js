@@ -13,6 +13,7 @@ module.exports = new GraphQLObjectType({
     name: { type: GraphQLString },
     email: { type: GraphQLString },
     avatar: { type: GraphQLString },
+    token:{type:GraphQLString},
     post: {
       type: new GraphQLList(require("./post")),
       resolve(parent, args) {
