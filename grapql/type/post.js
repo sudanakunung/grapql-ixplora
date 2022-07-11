@@ -25,6 +25,7 @@ module.exports = new GraphQLObjectType({
     height: { type: GraphQLString },
     url: { type: GraphQLString },
     type: { type: GraphQLString },
+    categorys: { type: new GraphQLList(require('./category')) },
     like_count: {
       type: GraphQLInt,
       resolve(parent, args) {
@@ -65,6 +66,8 @@ module.exports = new GraphQLObjectType({
     },
   }),
 });
+
+
 
 const commentType = new GraphQLObjectType({
   name: "comment",

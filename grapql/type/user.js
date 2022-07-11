@@ -41,7 +41,7 @@ module.exports = new GraphQLObjectType({
       type:GraphQLBoolean,
       args:{auth:{type:GraphQLID}},
       resolve(parent,args){
-        return followed(parent._id,args.auth)
+        return followed(parent.id,args.auth)
       }
     }
   }),
