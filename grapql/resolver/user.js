@@ -1,4 +1,6 @@
-const UserModel = require("../../model/user");
+const UserModel = require("../../model/user/user");
+const FollowingModel = require("../../model/user/following")
+const FollowerModel = require("../../model/user/follower");
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 var jwt = require('jsonwebtoken');
@@ -7,23 +9,28 @@ require("dotenv").config();
 const single_user = function (id) {
   return UserModel.findById(id);
 };
-const Login = async function(req){
- const user= await UserModel.findOne({emai:req.email})
-  if(!user)return 'Email not exist';
 
-  const match=await bcrypt.compare(req.password, user.password)
-  console.log(match)
-  if(!match)return 'password wrong';
-  var token = await jwt.sign({ foo: user.id }, process.env.secret);
-  user.token = token;
-  return {token,user};
+
+const get_following = async function(id){
+ return FollowingModel.find({user:id}).countDocuments()
 }
-const Register = async function(req){
 
+const get_follower = async function (id) {
+  return FollowerModel.find({ user: id }).countDocuments();
+};
+
+const followed = function(comment_user,auth){
+   return FollowingModel.find({
+     user: auth,
+     following: comment_user,
+   }).countDocuments();
+     
 }
 
 module.exports = {
   single_user,
-  Login,
-  Register
+
+  get_following,
+  get_follower,
+  followed,
 };

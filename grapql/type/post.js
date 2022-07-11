@@ -4,9 +4,16 @@ const {
   GraphQLString,
   GraphQLInt,
   GraphQLList,
+  GraphQLBoolean,
 } = require("graphql");
-const LikeModel = require("../../model/post/like");
-const CommentModel = require("../../model/post/comment");
+
+const {
+  comments,
+  liked,
+  share,
+  comment_count,
+  like_count,
+} = require("../resolver/post");
 const { single_user } = require("../resolver/user");
 
 module.exports = new GraphQLObjectType({
@@ -21,29 +28,39 @@ module.exports = new GraphQLObjectType({
     like_count: {
       type: GraphQLInt,
       resolve(parent, args) {
-        return LikeModel.find({ post: parent._id }).countDocuments();
+        return like_count(parent.id);
       },
     },
     liked: {
-      type: GraphQLInt,
+      type: GraphQLBoolean,
       args: { auth: { type: GraphQLID } },
       resolve(parent, args) {
-        return LikeModel.find({
-          post: parent._id,
-          user: args.auth,
-        }).countDocuments();
+        return liked(parent._id, args.auth);
       },
     },
     comments: {
       type: new GraphQLList(commentType),
+      args: { limit: { type: GraphQLInt }, offset: { type: GraphQLInt } },
       resolve(parent, args) {
-        return CommentModel.find({ post: parent.id });
+        return comments(parent.id, args.limit, args.offset);
       },
     },
     user: {
       type: require("./user"),
       resolve(parent, args) {
         return single_user(parent.user);
+      },
+    },
+    comment_count: {
+      type: GraphQLInt,
+      resolve(parent) {
+        return comment_count(parent.id);
+      },
+    },
+    share: {
+      type: GraphQLInt,
+      resolve(parent, args) {
+        return share(parent.id);
       },
     },
   }),
