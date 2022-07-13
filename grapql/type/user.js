@@ -8,7 +8,7 @@ const {
   GraphQLBoolean,
 } = require("graphql");
 const PostModel = require("../../model/post/post");
-const { get_following, get_follower,followed } = require("../resolver/user");
+const { get_following, get_follower,followed,roomChat } = require("../resolver/user");
 
 
 module.exports = new GraphQLObjectType({
@@ -37,12 +37,18 @@ module.exports = new GraphQLObjectType({
         return PostModel.find({ user_id: parent.id });
       },
     },
-    followed:{
-      type:GraphQLBoolean,
-      args:{auth:{type:GraphQLID}},
-      resolve(parent,args){
-        return followed(parent.id,args.auth)
-      }
-    }
+    followed: {
+      type: GraphQLBoolean,
+      args: { auth: { type: GraphQLID } },
+      resolve(parent, args) {
+        return followed(parent.id, args.auth);
+      },
+    },
+    roomChat: {
+      type: GraphQLList(require("./roomChat")),
+      resolve(parent, args) {
+        return roomChat(parent.id);
+      },
+    },
   }),
 });

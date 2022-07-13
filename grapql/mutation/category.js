@@ -7,6 +7,6 @@ module.exports = {
     image: { type: GraphQLNonNull(GraphQLString) },
   },
   resolve: async (parent, args, { res }) => {
-    console.log(args)
+        
   },
 };
