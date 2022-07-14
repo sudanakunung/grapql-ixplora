@@ -8,8 +8,8 @@ const {
   GraphQLBoolean,
 } = require("graphql");
 const PostModel = require("../../model/post/post");
-const { get_following, get_follower,followed,roomChat } = require("../resolver/user");
-
+const { get_following, get_follower,followed, } = require("../resolver/user");
+const {roomChat,groupRoomChat} = require("../resolver/message")
 
 module.exports = new GraphQLObjectType({
   name: "User",
@@ -48,6 +48,13 @@ module.exports = new GraphQLObjectType({
       type: GraphQLList(require("./roomChat")),
       resolve(parent, args) {
         return roomChat(parent.id);
+      },
+    },
+    groupRoomChat: {
+      type: GraphQLList(require("./groupChat")),
+      resolve(parent, args) {
+        
+        return groupRoomChat(parent.id);
       },
     },
   }),

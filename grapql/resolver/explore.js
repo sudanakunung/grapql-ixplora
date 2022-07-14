@@ -37,11 +37,25 @@ const recommend_post = async function (limit, offset) {
   return PostModel.find({ publish: { $eq: true } })
     .limit(limit)
     .skip(offset)
-    .sort({ likes: "desc", date: "desc", view: "desc" });
+    .sort({ date: "desc", likes: "desc", view: "desc" });
+};
+
+const near_me = async function (longitude, latitude, limit, offset) {
+  const latlang = {
+    type: "Point",
+    coordinates: [longitude, latitude],
+  };
+  return await locationModel
+    .find({
+      location: { $near: { $maxDistance: 1000, $geometry: latlang } },
+    })
+    .limit(limit)
+    .skip(offset);
 };
 
 module.exports = {
   following_post,
   near_post,
   recommend_post,
+  near_me,
 };

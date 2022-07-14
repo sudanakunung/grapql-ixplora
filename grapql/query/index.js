@@ -1,7 +1,8 @@
 const graphql = require("graphql");
-const PostModel = require("../../model/post/post")
-const {single_user} = require("../resolver/user")
+const PostModel = require("../../model/post/post");
+const {single_user} = require("../resolver/user");
 const {single_post} = require("../resolver/post");
+const {near_me} = require("../resolver/explore");
 const {
   following_post,
   near_post,
@@ -58,7 +59,7 @@ module.exports = new GraphQLObjectType({
         limit: { type: GraphQLInt },
         offset: { type: GraphQLInt },
       },
-      resolve(parent, {auth, limit, offset}) {
+      resolve(parent, { auth, limit, offset }) {
         return following_post(auth, limit, offset);
       },
     },
@@ -70,6 +71,19 @@ module.exports = new GraphQLObjectType({
       },
       resolve(parent, { limit, offset }) {
         return recommend_post(limit, offset);
+      },
+    },
+    near_me: {
+      type: GraphQLList(require("../type/location")),
+      args: {
+        longitude: { type: GraphQLFloat },
+        latitude: { type: GraphQLFloat },
+        limit: { type: GraphQLInt },
+        offset: { type: GraphQLInt },
+      },
+      resolve(parent, { longitude, latitude, limit, offset }) {
+       
+        return near_me(longitude, latitude, limit, offset);
       },
     },
   },

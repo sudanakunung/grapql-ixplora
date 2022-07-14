@@ -6,7 +6,8 @@ const {
   GraphQLList,
   GraphQLBoolean,
 } = require("graphql");
-const { single_user, last_chat } = require("../resolver/user");
+const { single_user } = require("../resolver/user");
+const { last_chat } = require("../resolver/message")
 module.exports = new GraphQLObjectType({
   name: "roomChat",
   fields: () => ({
