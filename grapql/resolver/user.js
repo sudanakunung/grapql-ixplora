@@ -3,6 +3,7 @@ const FollowingModel = require("../../model/user/following")
 const FollowerModel = require("../../model/user/follower");
 const RoomChatModel = require("../../model/message/room")
 const messageModel = require("../../model/message/message");
+const groupRoomChatModel = require("../../model/message/group");
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 var jwt = require('jsonwebtoken');
@@ -31,26 +32,12 @@ const followed = function(comment_user,auth){
    }).countDocuments();
      
 }
-const roomChat = function(id){
-  
-    return RoomChatModel.find({ user: id }).populate({
-      path: "user",
-      select: ["_id", "name", "avatar"],
-    });
 
-}
-const last_chat = function (id) {
-    return messageModel
-      .findOne({ roomId: id })
-      .sort({ _id: 1 })
-      
-}
 module.exports = {
   single_user,
-  roomChat,
   get_following,
   get_follower,
   followed,
   many_user,
-  last_chat,
+
 };
